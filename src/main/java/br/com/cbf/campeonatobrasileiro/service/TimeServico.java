@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TimeServico {
@@ -13,11 +14,15 @@ public class TimeServico {
     @Autowired
     private TimeRepository timeRepository;
 
-    public void cadastrarTime(Time time){
-        timeRepository.save(time);
+    public Time cadastrarTime(Time time){
+        return timeRepository.save(time);
     }
 
     public List<Time> listarTimes(){
         return timeRepository.findAll();
+    }
+
+    public Time buscarTime(Integer id){
+        return timeRepository.findById(id).get();
     }
 }
