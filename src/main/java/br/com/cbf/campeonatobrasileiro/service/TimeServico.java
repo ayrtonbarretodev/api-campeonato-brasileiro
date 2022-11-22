@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TimeServico {
@@ -25,4 +24,6 @@ public class TimeServico {
     public Time buscarTime(Integer id){
         return timeRepository.findById(id).get();
     }
+
+
 }
