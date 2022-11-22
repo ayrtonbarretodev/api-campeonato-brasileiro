@@ -16,4 +16,6 @@ public class Time {
     private String sigla;
     @Column(length = 2)
     private String uf;
+    @Column(length = 20)
+    private String estadio;
 }
