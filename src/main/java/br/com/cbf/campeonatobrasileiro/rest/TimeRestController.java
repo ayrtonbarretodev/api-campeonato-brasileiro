@@ -1,12 +1,10 @@
 package br.com.cbf.campeonatobrasileiro.rest;
 
 import br.com.cbf.campeonatobrasileiro.dto.TimeDTO;
-import br.com.cbf.campeonatobrasileiro.entity.Time;
 import br.com.cbf.campeonatobrasileiro.service.TimeServico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +23,7 @@ public class TimeRestController {
     })
 
     @GetMapping()
-    public ResponseEntity<List<Time>> getTimes(){
+    public ResponseEntity<List<TimeDTO>> getTimes(){
         return ResponseEntity.ok().body(timeServico.listarTimes());
     }
 
@@ -35,9 +33,8 @@ public class TimeRestController {
     })
 
     @GetMapping("{id}")
-    public ResponseEntity<Time> getTime(@PathVariable(value = "id") Integer id){
-        Time time = timeServico.buscarTime(id);
-        return ResponseEntity.ok().body(time);
+    public ResponseEntity<TimeDTO> getTime(@PathVariable(value = "id") Integer id){
+        return ResponseEntity.ok().body(timeServico.buscarTime(id));
     }
 
     @Operation(summary = "Criar Time",description = "Criando um novo time",responses = {
@@ -46,8 +43,8 @@ public class TimeRestController {
     })
 
     @PostMapping()
-    public ResponseEntity<Time> createTime(@RequestBody TimeDTO timeDTO) {
-        Time time = timeDTO.toTime();
-        return ResponseEntity.ok().body(timeServico.cadastrarTime(time));
+    public ResponseEntity<Void> createTime(@RequestBody TimeDTO timeDTO) {
+        timeServico.cadastrarTime(timeDTO);
+        return ResponseEntity.ok().build();
     }
 }
