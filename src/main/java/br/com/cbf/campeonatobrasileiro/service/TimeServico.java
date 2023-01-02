@@ -19,16 +19,21 @@ public class TimeServico {
     @Autowired
     private ModelMapper modelMapper;
 
-    public void cadastrarTime(TimeDTO timeDto){
+    public TimeDTO cadastrarTime(TimeDTO timeDto) throws Exception {
         Time time = toTime(timeDto);
-        timeRepository.save(time);
+        if (time.getId() == null){
+            time = timeRepository.save(time);
+            return toDto(time);
+        }else {
+            throw new Exception("Time já existe.");
+        }
     }
 
     public List<TimeDTO> listarTimes(){
         return timeRepository.findAll().stream().map(entity -> toDto(entity)).collect(Collectors.toList());
     }
 
-    private TimeDTO toDto(Time time) {
+    public TimeDTO toDto(Time time) {
         return modelMapper.map(time,TimeDTO.class);
     }
 
@@ -40,5 +45,7 @@ public class TimeServico {
         return toDto(timeRepository.findById(id).get());
     }
 
-
+    public List<Time> findAll() {
+        return timeRepository.findAll();
+    }
 }
