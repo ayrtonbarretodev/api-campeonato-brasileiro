@@ -43,8 +43,7 @@ public class TimeRestController {
     })
 
     @PostMapping()
-    public ResponseEntity<Void> createTime(@RequestBody TimeDTO timeDTO) {
-        timeServico.cadastrarTime(timeDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TimeDTO> createTime(@RequestBody TimeDTO timeDTO) throws Exception {
+        return ResponseEntity.ok().body(timeServico.cadastrarTime(timeDTO));
     }
 }
