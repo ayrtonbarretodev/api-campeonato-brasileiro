@@ -1,6 +1,5 @@
 package br.com.cbf.campeonatobrasileiro.entity;
 
-import br.com.cbf.campeonatobrasileiro.dto.TimeDTO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
