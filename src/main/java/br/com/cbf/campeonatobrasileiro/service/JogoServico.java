@@ -1,18 +1,19 @@
 package br.com.cbf.campeonatobrasileiro.service;
 
+import br.com.cbf.campeonatobrasileiro.dto.ClassificacaoDTO;
 import br.com.cbf.campeonatobrasileiro.dto.JogoDTO;
+import br.com.cbf.campeonatobrasileiro.dto.JogoFinalizadoDTO;
 import br.com.cbf.campeonatobrasileiro.entity.Jogo;
 import br.com.cbf.campeonatobrasileiro.entity.Time;
 import br.com.cbf.campeonatobrasileiro.repository.JogoRepository;
-import br.com.cbf.campeonatobrasileiro.repository.TimeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,7 +71,7 @@ public class JogoServico {
             //Gira os times no sentido horário, mantendo o primeiro lugar
             times.add(1,times.remove(times.size()-1));
         }
-        jogos.forEach(jogo -> System.out.println(jogo));
+        jogos.forEach(System.out::println);
 
         jogoRepository.saveAll(jogos);
         List<Jogo> jogos2 = new ArrayList<>();
@@ -96,8 +97,18 @@ public class JogoServico {
         return jogo;
     }
 
-    public List<JogoDTO> obterJogos() {
+    public List<JogoDTO> listarJogos() {
         return jogoRepository.findAll().stream().map(jogo -> toDto(jogo)).collect(Collectors.toList());
+    }
+
+    public List<JogoDTO> obterTodosJogosDeUmTime(String time) {
+        return jogoRepository.findAll().stream()
+                .filter(jogo -> jogo.getTimeMandante().getNome().equals(time) || jogo.getTimeVisitante().getNome().equals(time))
+                .map(jogo -> toDto(jogo)).collect(Collectors.toList());
+    }
+
+    public Long quantidadeRodadas() {
+        return (long) jogoRepository.findAll().size();
     }
 
 //    public Jogo toJogo(JogoDTO jogoDTO){
@@ -107,4 +118,37 @@ public class JogoServico {
     public JogoDTO toDto(Jogo jogo){
         return modelMapper.map(jogo,JogoDTO.class);
     }
+
+    public JogoDTO buscarJogo(Integer id) {
+        return toDto(jogoRepository.findById(id).get());
+    }
+
+    public JogoDTO finalizar(Integer id, JogoFinalizadoDTO jogoFinalizadoDTO) throws Exception {
+        Optional<Jogo> jogo = jogoRepository.findById(id);
+        if (!jogo.isPresent()){
+         throw new Exception("Jogo não existe");
+        }
+        jogo.get().setGolsTimeMandante(jogoFinalizadoDTO.getGolsTimeMandante());
+        jogo.get().setGolsTimeVisitante(jogoFinalizadoDTO.getGolsTimeVisitante());
+        jogo.get().setEncerrado(true);
+        jogo.get().setPublico(jogoFinalizadoDTO.getPublicoPagante());
+        return toDto(jogoRepository.save(jogo.get()));
+    }
+
+//    public JogoDTO finalizarJogo(Integer id, JogoDTO jogoDto) {
+//        Optional<Jogo> jogo = jogoRepository.findById(id);
+//        jogo.get().setGolsTimeMandante(jogoDto.getGolsTimeMandante());
+//        jogo.get().setGolsTimeVisitante(jogoDto.getGolsTimeVisitante());
+//        jogo.get().setEncerrado(true);
+//        jogo.get().setPublico(jogoDto.getPublicoPagante());
+//        return toDto(jogoRepository.save(jogo.get()));
+//    }
+
+//    public List<ClassificacaoDTO> obterClassificacao() {
+//        return null;
+//    }
+
+//    public Optional<Jogo> buscarJogoPorId(Integer id){
+//        return jogoRepository.findById(id);
+//    }
 }
