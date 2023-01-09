@@ -6,5 +6,5 @@ import lombok.Data;
 public class JogoFinalizadoDTO {
     private Integer golsTimeMandante;
     private Integer golsTimeVisitante;
-    private Integer publicoPagante;
+    private Integer publico;
 }

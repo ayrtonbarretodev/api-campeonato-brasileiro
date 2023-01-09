@@ -10,7 +10,7 @@ public class JogoDTO {
     private LocalDateTime data;
     private Integer golsTimeMandante;
     private Integer golsTimeVisitante;
-    private Integer publicoPagante;
+    private Integer publico;
     private Boolean encerrado;
     private Integer rodada;
     private TimeDTO timeMandante;
